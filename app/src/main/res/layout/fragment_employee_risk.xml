@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.EmployeeRiskFragment">
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="30dp"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:id="@+id/emergency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/emergency"
+        android:layout_margin="5dp"
+        android:textSize="15sp"
+        android:textColor="#000000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/total"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/total"
+        android:layout_margin="5dp"
+        android:textSize="15sp"
+        android:textColor="#C6B416"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ageLessThan18"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/total"
+        android:textSize="15sp"
+        android:layout_margin="5dp"
+        android:textColor="#2DB8F6"
+        app:layout_constraintLeft_toRightOf="@id/ageLessThan18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ageBetween18And60"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/total"
+        android:textSize="15sp"
+        android:layout_margin="5dp"
+        android:textColor="#35070E"
+        app:layout_constraintLeft_toRightOf="@id/ageBetween18And60"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ageAbove60"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/emergency_view_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="total,ageLessThan18,ageBetween18And60,ageAbove60" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/view_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="emergency,emergency_view_group"/>
+
+    <TextView
+        android:id="@+id/error_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FB4A4A"
+        android:textSize="15sp"
+        android:layout_margin="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/something_wrong_happened_please_check_your_internet_connection"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
