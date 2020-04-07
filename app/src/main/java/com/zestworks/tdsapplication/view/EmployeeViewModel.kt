@@ -26,9 +26,9 @@ class EmployeeViewModel(private val repository: Repository) : ViewModel() {
                                 val emergencyViewState =
                                     EmployeeViewState.Emergency(
                                         total = results.size,
-                                        numOfPeopleAbove60 = results.count { it.employeeAge!!.toInt() > 60 },
-                                        numOfPeopleBetween18And60 = results.count { it.employeeAge!!.toInt() in 18..60 },
-                                        numOfPeopleUnder18 = results.count { it.employeeAge!!.toInt() < 18 })
+                                        numOfPeopleAbove60 = results.count { it.employeeAge.toInt() > 60 },
+                                        numOfPeopleBetween18And60 = results.count { it.employeeAge.toInt() in 18..60 },
+                                        numOfPeopleUnder18 = results.count { it.employeeAge.toInt() < 18 })
                                 _currentState.postValue(emergencyViewState)
                             }
                             is NetworkResult.Error -> _currentState.postValue(EmployeeViewState.NetworkError(networkResult.reason))
