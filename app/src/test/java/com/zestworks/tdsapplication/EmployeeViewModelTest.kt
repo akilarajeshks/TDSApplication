@@ -6,23 +6,15 @@ import com.zestworks.tdsapplication.repository.NetworkResult
 import com.zestworks.tdsapplication.repository.Repository
 import com.zestworks.tdsapplication.view.EmployeeViewModel
 import com.zestworks.tdsapplication.view.EmployeeViewState
-import io.kotest.matchers.doubles.exactly
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-@ExperimentalCoroutinesApi
+
 class EmployeeViewModelTest {
 
     private val repository: Repository = mockk()
@@ -34,22 +26,13 @@ class EmployeeViewModelTest {
 
     private val testObserver: Observer<EmployeeViewState> = mockk(relaxed = true)
 
-    private val testCoroutineDispatcher = TestCoroutineDispatcher()
-
     @Before
     fun setUp() {
-        employeeViewModel = EmployeeViewModel(repository)
-        employeeViewModel.currentState.observeForever(testObserver)
-        Dispatchers.setMain(testCoroutineDispatcher)
-    }
 
-    @After
-    fun reset() {
-        Dispatchers.resetMain()
     }
 
     @Test
-    fun testSimpleLoadingEmergency() = runBlockingTest {
+    fun testSimpleLoadingEmergency() {
         every { repository.emergencyStream() } answers {
             Observable.just(true)
         }
@@ -57,7 +40,8 @@ class EmployeeViewModelTest {
             repository.employeeDetailsStream()
         } answers { Observable.just(NetworkResult.Success(listOf())) }
 
-        employeeViewModel.onUILoad()
+        employeeViewModel = EmployeeViewModel(repository)
+        employeeViewModel.currentState.observeForever(testObserver)
 
         verifyOrder {
             testObserver.onChanged(
@@ -76,14 +60,16 @@ class EmployeeViewModelTest {
         every { repository.emergencyStream() } answers {
             Observable.just(true)
         }
-
+        val mockEmployeeDetails = PublishSubject.create<NetworkResult>()
         every {
             repository.employeeDetailsStream()
-        } answers { Observable.just(NetworkResult.Success(listOf()), NetworkResult.Success(listOf())) }
+        } answers { mockEmployeeDetails }
 
-        employeeViewModel.onUILoad()
+        employeeViewModel = EmployeeViewModel(repository)
+        employeeViewModel.currentState.observeForever(testObserver)
 
-        testCoroutineDispatcher.advanceTimeBy(10000)
+        mockEmployeeDetails.onNext(NetworkResult.Success(listOf()))
+        mockEmployeeDetails.onNext(NetworkResult.Success(listOf()))
 
         verifyOrder {
             testObserver.onChanged(
@@ -107,14 +93,19 @@ class EmployeeViewModelTest {
 
     @Test
     fun testNoEmergency(){
+        val mockEmergencies = PublishSubject.create<Boolean>()
         every { repository.emergencyStream() } answers {
-            Observable.just(true,false)
+            mockEmergencies
         }
         every {
             repository.employeeDetailsStream()
         } answers { Observable.just(NetworkResult.Success(listOf())) }
 
-        employeeViewModel.onUILoad()
+        employeeViewModel = EmployeeViewModel(repository)
+        employeeViewModel.currentState.observeForever(testObserver)
+
+        mockEmergencies.onNext(true)
+        mockEmergencies.onNext(false)
 
         verifyOrder {
             testObserver.onChanged( EmployeeViewState.Emergency(
@@ -134,7 +125,8 @@ class EmployeeViewModelTest {
         every {
             repository.employeeDetailsStream()
         } answers { Observable.just(NetworkResult.Error(errorMessage)) }
-        employeeViewModel.onUILoad()
+        employeeViewModel = EmployeeViewModel(repository)
+        employeeViewModel.currentState.observeForever(testObserver)
 
         verifyOrder {
             testObserver.onChanged(EmployeeViewState.NetworkError(reason = errorMessage))

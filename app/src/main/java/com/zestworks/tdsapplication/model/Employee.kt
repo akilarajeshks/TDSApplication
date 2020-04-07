@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName
 
 data class Employee(
     @SerializedName("data")
-    val `data`: List<Data>?,
+    val `data`: List<Data>,
     @SerializedName("status")
-    val status: String?
+    val status: String
 )
 
 data class Data(
     @SerializedName("employee_age")
-    val employeeAge: String?,
+    val employeeAge: String,
     @SerializedName("employee_name")
-    val employeeName: String?,
+    val employeeName: String,
     @SerializedName("employee_salary")
-    val employeeSalary: String?,
+    val employeeSalary: String,
     @SerializedName("id")
-    val id: String?,
+    val id: String,
     @SerializedName("profile_image")
-    val profileImage: String?
+    val profileImage: String
 )
 

@@ -9,15 +9,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class EmployeeViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _currentState = MutableLiveData<EmployeeViewState>()
-    val currentState = _currentState as LiveData<EmployeeViewState>
-
     private val compositeDisposable = CompositeDisposable()
     private var refreshLoopDisposable = CompositeDisposable()
 
-    fun onUILoad() {
+    private val _currentState = MutableLiveData<EmployeeViewState>()
+    val currentState = _currentState as LiveData<EmployeeViewState>
+
+    init {
         compositeDisposable.add(
-            repository.emergencyStream().subscribe { isEmergency ->
+            repository.emergencyStream().distinctUntilChanged().subscribe { isEmergency ->
                 if (isEmergency) {
                     refreshLoopDisposable.add(repository.employeeDetailsStream().subscribe { networkResult ->
                         when (networkResult) {
@@ -46,6 +46,7 @@ class EmployeeViewModel(private val repository: Repository) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        refreshLoopDisposable.dispose()
         compositeDisposable.dispose()
     }
 }

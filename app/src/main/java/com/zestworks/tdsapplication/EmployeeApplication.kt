@@ -5,6 +5,7 @@ import com.zestworks.tdsapplication.repository.EmployeeNetworkService
 import com.zestworks.tdsapplication.repository.NetworkRepository
 import com.zestworks.tdsapplication.repository.Repository
 import com.zestworks.tdsapplication.view.EmployeeViewModel
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -21,7 +22,8 @@ class EmployeeApplication:Application() {
             single { provideRetrofit() }
             single<Repository> {
                 NetworkRepository(
-                    get()
+                    get(),
+                    Schedulers.io()
                 )
             }
             viewModel { EmployeeViewModel(get()) }

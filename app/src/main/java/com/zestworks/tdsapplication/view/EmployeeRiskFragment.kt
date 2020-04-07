@@ -44,6 +44,5 @@ class EmployeeRiskFragment : Fragment(R.layout.fragment_employee_risk) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         employeeViewModel.currentState.observe(viewLifecycleOwner, render)
-        employeeViewModel.onUILoad()
     }
 }
