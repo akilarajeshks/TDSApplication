@@ -28,8 +28,8 @@ class NetworkRepository(private val employeeNetworkService: EmployeeNetworkServi
 
     override fun emergencyStream(): Observable<Boolean> {
         val r = Random()
-        val low = 10
-        val high = 15
+        val low = 1
+        val high = 5
         var i1 = 0
         val arrayOf = arrayOf(true, true, false, true, false)
         return Observable

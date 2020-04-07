@@ -10,5 +10,5 @@ sealed class EmployeeViewState {
 
     object NoEmergency : EmployeeViewState()
 
-    object NetworkError:EmployeeViewState()
+    data class NetworkError(val reason:String):EmployeeViewState()
 }

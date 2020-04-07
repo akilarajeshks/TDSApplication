@@ -23,19 +23,20 @@ class EmployeeRiskFragment : Fragment(R.layout.fragment_employee_risk) {
                 ageLessThan18.text = it.numOfPeopleUnder18.toString()
                 ageBetween18And60.text = it.numOfPeopleBetween18And60.toString()
                 ageAbove60.text = it.numOfPeopleAbove60.toString()
-                view_group.visibility = View.VISIBLE
+                emergency.visibility = View.VISIBLE
                 error_text_view.visibility = View.GONE
             }
             EmployeeViewState.NoEmergency -> {
                 emergency.text = getString(R.string.no_emergency)
                 emergency.setTextColor(Color.GREEN)
                 emergency_view_group.visibility = View.GONE
-                view_group.visibility = View.VISIBLE
+                emergency.visibility = View.VISIBLE
                 error_text_view.visibility = View.GONE
             }
-            EmployeeViewState.NetworkError -> {
+            is EmployeeViewState.NetworkError -> {
                 error_text_view.visibility = View.VISIBLE
-                view_group.visibility = View.GONE
+                emergency_view_group.visibility = View.GONE
+                emergency.visibility = View.GONE
             }
         }
     }
